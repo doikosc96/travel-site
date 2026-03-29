@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Europe, May 2022 — Coleman &amp; Madeleine</title>
+  <title>Asia, Dec 2022 – Jan 2023 — Coleman &amp; Madeleine</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
@@ -26,13 +26,13 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse at 30% 60%, rgba(60,40,10,0.45) 0%, transparent 60%),
-        radial-gradient(ellipse at 75% 30%, rgba(10,25,60,0.5) 0%, transparent 55%),
+        radial-gradient(ellipse at 25% 55%, rgba(70,20,20,0.4) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 35%, rgba(15,45,40,0.5) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 80%, rgba(60,45,10,0.3) 0%, transparent 50%),
         #07080f;
       z-index: 1;
     }
 
-    /* Animated grain overlay for depth */
     .trip-hero-bg::after {
       content: '';
       position: absolute;
@@ -43,7 +43,6 @@
       pointer-events: none;
     }
 
-    /* Thin horizon line */
     .trip-hero::after {
       content: '';
       position: absolute;
@@ -99,7 +98,6 @@
       margin-bottom: 44px;
     }
 
-    /* City pills */
     .city-pills {
       display: flex;
       flex-wrap: wrap;
@@ -119,7 +117,6 @@
       padding: 5px 14px;
     }
 
-    /* Trip stats row */
     .trip-hero-stats {
       display: flex;
       gap: 40px;
@@ -127,9 +124,7 @@
       flex-wrap: wrap;
     }
 
-    .hero-stat {
-      text-align: center;
-    }
+    .hero-stat { text-align: center; }
 
     .hero-stat-val {
       font-family: var(--font-display);
@@ -150,7 +145,6 @@
       display: block;
     }
 
-    /* Scroll cue */
     .hero-scroll-cue {
       position: absolute;
       bottom: 32px;
@@ -182,7 +176,6 @@
       padding: 96px 32px 56px;
     }
 
-    /* Section: journey intro */
     .journey-intro {
       margin-bottom: 72px;
     }
@@ -243,6 +236,20 @@
       color: var(--gold-dim);
     }
 
+    .city-dates {
+      font-family: var(--font-ui);
+      font-size: 0.5rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .city-dates::before {
+      content: '\00b7';
+      margin: 0 12px 0 0;
+      color: rgba(255,255,255,0.12);
+    }
+
     .city-body p {
       font-family: var(--font-display);
       font-size: 1.08rem;
@@ -250,6 +257,11 @@
       line-height: 1.96;
       color: rgba(255,255,255,0.52);
       margin-bottom: 1.2em;
+    }
+
+    .city-body .placeholder-text {
+      font-style: italic;
+      color: rgba(255,210,122,0.3);
     }
 
     /* Photo placeholder grid */
@@ -298,7 +310,6 @@
       transform: scale(1.02);
     }
 
-    /* Add photo label (shown when src not set) */
     .photo-slot-label {
       font-family: var(--font-ui);
       font-size: 0.5rem;
@@ -325,7 +336,7 @@
       color: rgba(255,255,255,0.6);
     }
 
-    /* ── Back / next navigation ── */
+    /* ── Trip navigation ── */
     .trip-nav {
       max-width: 680px;
       margin: 0 auto;
@@ -370,34 +381,35 @@
     <div class="trip-hero-bg"></div>
 
     <div class="trip-hero-content">
-      <span class="trip-hero-eyebrow">May 2022 &nbsp;·&nbsp; Two weeks</span>
-      <h1 class="trip-hero-title">Europe</h1>
-      <p class="trip-hero-subtitle">Our first adventure together</p>
+      <span class="trip-hero-eyebrow">Dec 2022 – Jan 2023 &nbsp;·&nbsp; One month</span>
+      <h1 class="trip-hero-title">Asia</h1>
+      <p class="trip-hero-subtitle">The first big family trip abroad</p>
 
       <div class="city-pills">
-        <span class="city-pill">Paris</span>
-        <span class="city-pill">Venice</span>
-        <span class="city-pill">Florence</span>
-        <span class="city-pill">Rome</span>
-        <span class="city-pill">Capri</span>
+        <span class="city-pill">Tokyo</span>
+        <span class="city-pill">Hong Kong</span>
+        <span class="city-pill">Ubud</span>
+        <span class="city-pill">Seminyak</span>
+        <span class="city-pill">Hanoi</span>
+        <span class="city-pill">Ho Chi Minh City</span>
       </div>
 
       <div class="trip-hero-stats">
         <div class="hero-stat">
-          <span class="hero-stat-val">5</span>
+          <span class="hero-stat-val">6</span>
           <span class="hero-stat-label">Cities</span>
         </div>
         <div class="hero-stat">
-          <span class="hero-stat-val">2</span>
+          <span class="hero-stat-val">4</span>
           <span class="hero-stat-label">Countries</span>
         </div>
         <div class="hero-stat">
-          <span class="hero-stat-val">14</span>
+          <span class="hero-stat-val">31</span>
           <span class="hero-stat-label">Days</span>
         </div>
         <div class="hero-stat">
           <span class="hero-stat-val">1</span>
-          <span class="hero-stat-label">First</span>
+          <span class="hero-stat-label">New Year</span>
         </div>
       </div>
     </div>
@@ -415,231 +427,189 @@
     <!-- Opening -->
     <div class="journey-intro">
       <p>
-        It was a planned trip — exciting but a little anxious. We had never been out
-        of the country together before, so we didn't really know how each other traveled.
-        We started dating in January 2020, and while we had moved in together by this
-        point it was still a relatively new relationship. I was 24, Madeleine was 22.
-        Young, which made it all the more exciting.
+        This was the one we'd been waiting for. Originally planned for 2020, delayed
+        by the world shutting down, and finally happening two years later than expected.
+        A month-long family trip through Asia — visiting Mike in Hong Kong for the first
+        time, ringing in the new year in Bali, winding through Vietnam, and bookending
+        the whole thing with Tokyo. Four countries, six cities, thirty-one days.
       </p>
       <p>
-        Very romantic, very adventurous, but slow. We both found pretty quickly that we
-        like to relax in a city — vacation as if we live there. A couple of big things
-        we want to hit over a few days but no rush, just flowing through with an ease
-        and lightness. Flitting in and out of shops, stopping at a café for a snack or
-        an espresso, the occasional guilty cigarette here and there.
+        <span class="placeholder-text">Add more about the anticipation, the delayed plans from 2020, what it meant to finally make it happen...</span>
       </p>
     </div>
 
-    <!-- ─── PARIS ─── -->
+    <!-- ─── TOKYO (layover) ─── -->
     <section class="city-section">
       <div class="city-section-header">
-        <h2 class="city-name">Paris</h2>
-        <span class="city-country">France</span>
+        <h2 class="city-name">Tokyo</h2>
+        <span class="city-country">Japan</span>
+        <span class="city-dates">Dec 16, 2022 · Layover</span>
       </div>
       <div class="city-body">
         <p>
-          Paris is the city of love. Waking up early while Madeleine slept, reading
-          Camus at a café, then bringing back croissants for her to wake up to.
-          Strolling down the Champs-Élysées, dragging her through the Louvre to feed
-          my insatiable Monet appetite. Riding up to Montmartre to buy our first oil
-          painting together to commemorate the trip. Drinks at Bar Hemingway in the
-          Ritz with a world-famous bartender.
+          Technically our first time setting foot in Japan — a layover at Narita Airport
+          just long enough to grab our first real bowl of ramen. Not a bad way to start
+          a month-long trip.
         </p>
-        <p>
-          Our last day we spent lounging on the lawn in front of the Eiffel Tower —
-          beautiful sunny day, some bread, cheese, ham, and rosé. That was the one.
+        <p class="placeholder-text">
+          Add more memories from the Narita layover — the airport, the ramen, the excitement of the trip beginning...
         </p>
 
         <div class="photo-grid">
-          <div class="photo-slot">
-            <img src="../images/europe-2022/paris-1.jpeg" alt="Paris">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/paris-2.jpeg" alt="Paris">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/paris-3.jpeg" alt="Paris">
-          </div>
-        </div>
-        <div class="photo-grid">
-          <div class="photo-slot">
-            <img src="../images/europe-2022/paris-4.jpeg" alt="Paris">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/paris-5.jpeg" alt="Paris">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/paris-6.jpeg" alt="Paris">
-          </div>
-        </div>
-        <div class="photo-grid">
-          <div class="photo-slot">
-            <img src="../images/europe-2022/paris-7.jpeg" alt="Paris">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/paris-8.jpeg" alt="Paris">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/paris-9.jpeg" alt="Paris">
-          </div>
-        </div>
-        <div class="photo-grid">
-          <div class="photo-slot">
-            <img src="../images/europe-2022/paris-10.jpeg" alt="Paris">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/paris-11.jpeg" alt="Paris">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/paris-12.jpeg" alt="Paris">
-          </div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 1</span></div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 2</span></div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 3</span></div>
         </div>
       </div>
     </section>
 
-    <!-- ─── VENICE ─── -->
+    <!-- ─── HONG KONG ─── -->
     <section class="city-section">
       <div class="city-section-header">
-        <h2 class="city-name">Venice</h2>
-        <span class="city-country">Italy</span>
+        <h2 class="city-name">Hong Kong</h2>
+        <span class="city-country">China</span>
+        <span class="city-dates">Dec 17 – 30</span>
       </div>
       <div class="city-body">
         <p>
-          Venice was a trip. It felt like a movie set. We had a little boutique hotel
-          tucked in a back, quiet alley — but we livened it up when we met Victor and
-          Nicky and partied through the night, found some stray kittens, and had them
-          sleepover on our floor. A blast in a really neat city.
+          Two weeks in Hong Kong visiting Mike for the first time. The trip that was
+          supposed to happen in 2020, finally real, finally here.
+        </p>
+        <p class="placeholder-text">
+          Add memories from Hong Kong — seeing Mike, the city itself, the food, the skyline, Victoria Peak, the markets, favorite moments...
         </p>
 
         <div class="photo-grid two-col">
-          <div class="photo-slot">
-            <img src="../images/europe-2022/venice-1.jpg" alt="Venice canal walkway">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/venice-2.jpg" alt="Sotoportego e Corte del Milion">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/venice-3.jpg" alt="Airport luggage">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/venice-4.jpg" alt="Stray kitten in Venice">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/venice-5.jpg" alt="Venice">
-          </div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 1</span></div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 2</span></div>
+        </div>
+        <div class="photo-grid two-col">
+          <div class="photo-slot"><span class="photo-slot-label">Photo 3</span></div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 4</span></div>
         </div>
       </div>
     </section>
 
-    <!-- ─── FLORENCE ─── -->
+    <!-- ─── UBUD, BALI ─── -->
     <section class="city-section">
       <div class="city-section-header">
-        <h2 class="city-name">Florence</h2>
-        <span class="city-country">Italy</span>
+        <h2 class="city-name">Ubud</h2>
+        <span class="city-country">Bali, Indonesia</span>
+        <span class="city-dates">Dec 30 – Jan 4</span>
       </div>
       <div class="city-body">
         <p>
-          Florence was more strolls, sandwiches, art, and pasta. We took the walk up
-          to Piazzale Michelangelo and found a table at a restaurant at the top with
-          views over the city. At some point the waitress came over, visibly concerned —
-          they had a reservation in three hours. "Do you think you'll be finished at
-          the table by then?" We were on a bottle of wine watching the city at sunset.
-          Perfect.
+          A long night of travel from Hong Kong to the heart of Bali. We rang in
+          2023 in Ubud — a New Year's Eve we won't forget.
         </p>
-
-        <div class="photo-grid two-col">
-          <div class="photo-slot">
-            <img src="../images/europe-2022/florence-1.jpg" alt="Florence">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/florence-2.jpg" alt="Florence">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/florence-3.jpg" alt="Florence">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/florence-4.jpg" alt="Florence">
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─── ROME ─── -->
-    <section class="city-section">
-      <div class="city-section-header">
-        <h2 class="city-name">Rome</h2>
-        <span class="city-country">Italy</span>
-      </div>
-      <div class="city-body">
-        <p>
-          In Rome you could feel the gravity of history. The Colosseum and its hordes
-          of tourists. The Trevi Fountain tucked around some little side street corner —
-          we had McDonald's vanilla cones and fries before we walked up to it. Seeing
-          the Vatican and St. Peter's Basilica was truly incredible together.
+        <p class="placeholder-text">
+          Add memories from Ubud — the rice terraces, the temples, New Year's Eve, the vibe of the town, the food, the monkeys...
         </p>
 
         <div class="photo-grid">
-          <div class="photo-slot">
-            <img src="../images/europe-2022/rome-1.jpg" alt="Rome">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/rome-2.jpg" alt="Rome">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/rome-3.jpg" alt="Rome">
-          </div>
-        </div>
-        <div class="photo-grid two-col">
-          <div class="photo-slot">
-            <img src="../images/europe-2022/rome-4.jpg" alt="Rome">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/rome-5.jpg" alt="Rome">
-          </div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 1</span></div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 2</span></div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 3</span></div>
         </div>
       </div>
     </section>
 
-    <!-- ─── CAPRI ─── -->
+    <!-- ─── SEMINYAK, BALI ─── -->
     <section class="city-section">
       <div class="city-section-header">
-        <h2 class="city-name">Capri</h2>
-        <span class="city-country">Italy</span>
+        <h2 class="city-name">Seminyak</h2>
+        <span class="city-country">Bali, Indonesia</span>
+        <span class="city-dates">Jan 5 – 6</span>
       </div>
       <div class="city-body">
         <p>
-          We spent the day in Capri tooling around the island on our little dinghy —
-          hopping in the water in coves, checking out the Blue Grotto, and spontaneously
-          running into Kendall, Jordan, and their crew on our boat trip. We grabbed
-          drinks and food with them to close out the day.
+          Two days on the coast before flying out — a different side of Bali from Ubud.
         </p>
-        <p>
-          It was an incredible first trip together with so many memories to build our
-          life upon. We love to travel together and this set the tone — it was possible,
-          and we weren't going to kill each other traveling together. Which is a very
-          positive sign.
+        <p class="placeholder-text">
+          Add memories from Seminyak — the beach, the sunset bars, the contrast with Ubud, the vibe...
         </p>
 
         <div class="photo-grid">
-          <div class="photo-slot">
-            <img src="../images/europe-2022/capri-1.jpeg" alt="Capri">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/capri-2.jpeg" alt="Capri">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/capri-3.jpeg" alt="Capri">
-          </div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 1</span></div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 2</span></div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 3</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── HANOI ─── -->
+    <section class="city-section">
+      <div class="city-section-header">
+        <h2 class="city-name">Hanoi</h2>
+        <span class="city-country">Vietnam</span>
+        <span class="city-dates">Jan 7 – 10</span>
+      </div>
+      <div class="city-body">
+        <p>
+          From Bali to northern Vietnam — a completely different world. Hanoi hit
+          differently.
+        </p>
+        <p class="placeholder-text">
+          Add memories from Hanoi — the Old Quarter, the street food, pho, the chaos of the motorbikes, Hoan Kiem Lake, the energy of the city...
+        </p>
+
+        <div class="photo-grid two-col">
+          <div class="photo-slot"><span class="photo-slot-label">Photo 1</span></div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 2</span></div>
         </div>
         <div class="photo-grid two-col">
-          <div class="photo-slot">
-            <img src="../images/europe-2022/capri-4.jpeg" alt="Capri">
-          </div>
-          <div class="photo-slot">
-            <img src="../images/europe-2022/capri-5.jpeg" alt="Capri">
-          </div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 3</span></div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 4</span></div>
         </div>
+      </div>
+    </section>
 
+    <!-- ─── HO CHI MINH CITY ─── -->
+    <section class="city-section">
+      <div class="city-section-header">
+        <h2 class="city-name">Ho Chi Minh City</h2>
+        <span class="city-country">Vietnam</span>
+        <span class="city-dates">Jan 11 – 14</span>
+      </div>
+      <div class="city-body">
+        <p>
+          SAIGOOOOON. The southern counterpart to Hanoi — warmer, louder, and with
+          its own unmistakable energy. The last real stop before heading home.
+        </p>
+        <p class="placeholder-text">
+          Add memories from Saigon — the War Remnants Museum, the markets, the coffee, banh mi, the nightlife, the contrast with Hanoi...
+        </p>
+
+        <div class="photo-grid">
+          <div class="photo-slot"><span class="photo-slot-label">Photo 1</span></div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 2</span></div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 3</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── TOKYO (return) ─── -->
+    <section class="city-section">
+      <div class="city-section-header">
+        <h2 class="city-name">Tokyo</h2>
+        <span class="city-country">Japan</span>
+        <span class="city-dates">Jan 15 · Day trip</span>
+      </div>
+      <div class="city-body">
+        <p>
+          A longer layover on the way home — this time we made it out of the airport
+          and into the city for a full day. A proper taste of Tokyo to close out an
+          incredible month.
+        </p>
+        <p class="placeholder-text">
+          Add memories from the Tokyo day trip — Shibuya, Shinjuku, the food, the contrast with everything else on the trip, the feeling of heading home after a month...
+        </p>
+
+        <div class="photo-grid">
+          <div class="photo-slot"><span class="photo-slot-label">Photo 1</span></div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 2</span></div>
+          <div class="photo-slot"><span class="photo-slot-label">Photo 3</span></div>
+        </div>
       </div>
     </section>
 
@@ -647,8 +617,8 @@
 
   <!-- TRIP NAV -->
   <div class="trip-nav">
-    <a href="../trips.html">← All trips</a>
-    <a href="asia-dec-2022.html">Asia 2022 →</a>
+    <a href="../trips.html">&larr; All trips</a>
+    <a href="europe-may-2022.html">&larr; Europe 2022</a>
   </div>
 
   <footer>
@@ -656,7 +626,6 @@
   </footer>
 
   <script>
-    // Fade in city sections as they scroll into view
     const sections = document.querySelectorAll('.city-section');
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => {
