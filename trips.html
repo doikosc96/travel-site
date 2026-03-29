@@ -72,19 +72,20 @@
     .trip-card-item {
       position: relative;
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-start;
       margin-bottom: 52px;
-      padding-right: calc(50% + 28px);
+      padding-left: calc(50% + 28px);
+      padding-right: 0;
       opacity: 0;
-      transform: translateX(-24px);
+      transform: translateX(24px);
       animation: slideIn 0.7s ease forwards;
     }
 
-    .trip-card-item:nth-child(even) {
-      justify-content: flex-start;
-      padding-right: 0;
-      padding-left: calc(50% + 28px);
-      transform: translateX(24px);
+    .trip-card-item.right {
+      justify-content: flex-end;
+      padding-left: 0;
+      padding-right: calc(50% + 28px);
+      transform: translateX(-24px);
     }
 
     .trip-card-item:nth-child(1)  { animation-delay: 0.1s; }
@@ -237,7 +238,7 @@
     @media (max-width: 600px) {
       .timeline::before { left: 20px; }
       .trip-card-item,
-      .trip-card-item:nth-child(even) {
+      .trip-card-item.right {
         padding-right: 0;
         padding-left: 44px;
         justify-content: flex-start;
@@ -317,7 +318,7 @@
 
     <div class="year-marker"><span>2022</span></div>
 
-    <article class="trip-card-item">
+    <article class="trip-card-item right">
       <div class="trip-dot"></div>
       <a href="trips/europe-may-2022.html" class="trip-card-link">
         <div class="trip-card-inner">
@@ -347,6 +348,7 @@
     <!--
     ══════════════════════════════════════════
     ADD YOUR NEXT TRIP HERE — copy this block:
+    Alternate sides: omit class for left, add class="right" for right.
 
     <div class="year-marker"><span>YEAR</span></div>
 
