@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coleman &amp; Madeleine</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       FIXED NAV BAR (always present, fades in)
+  ════════════════════════════════════════════ -->
+  <nav id="navbar">
+    <div id="nav-globe-slot">
+      <!-- Globe canvas teleports here via JS on scroll -->
+    </div>
+    <span id="nav-title">Coleman <span class="amp">&amp;</span> Madeleine</span>
+    <ul id="nav-links">
+      <li><a href="trips.html">Trips</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="journal.html">Journal</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════
+       HERO SECTION
+  ════════════════════════════════════════════ -->
+  <section id="hero">
+
+    <!-- Star canvas (static background) -->
+    <canvas id="star-canvas"></canvas>
+
+    <!-- Three.js globe -->
+    <div id="globe-wrapper">
+      <canvas id="globe-canvas"></canvas>
+    </div>
+
+    <!-- Names overlay -->
+    <div id="hero-overlay">
+      <div id="names-row">
+        <span id="name-left">Coleman</span>
+        <span id="amp-center">&amp;</span>
+        <span id="name-right">Madeleine</span>
+      </div>
+      <p id="hero-tagline">our adventures</p>
+      <div id="scroll-hint">
+        <span>scroll</span>
+        <div class="hint-line"></div>
+        <div class="hint-arrow"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       PAGE CONTENT (below the hero)
+  ════════════════════════════════════════════ -->
+  <main id="content">
+
+    <!-- Intro -->
+    <section class="intro-section">
+      <p class="intro-lead">This is our place.</p>
+      <p class="intro-body">
+        A living record of our travels and adventures together —
+        somewhere ever-evolving as we journey across the earth.
+        An interactive home to store and relive every experience.
+      </p>
+    </section>
+
+    <!-- Recent trips preview -->
+    <section class="cards-section">
+      <h2 class="section-label">Recent Adventures</h2>
+      <div class="card-grid">
+        <!-- Keep in sync with trips.html — show most recent trips -->
+        <a href="trips/europe-may-2022.html" class="trip-card">
+          <div class="card-inner">
+            <span class="card-location">Europe</span>
+            <span class="card-date">May 2022</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>Coleman <span class="amp">&amp;</span> Madeleine &nbsp;·&nbsp; made with love</p>
+    </footer>
+
+  </main>
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+  (function () {
+
+    /* ─── CONFIG ─── */
+    const HERO_H       = window.innerHeight;
+    const SCROLL_DIST  = 420;       // px of scroll before transition completes
+    const NAV_H        = 56;
+    const NAV_GLOBE_R  = 22;        // radius of globe in nav (px)
+
+    /* ─── ELEMENTS ─── */
+    const hero       = document.getElementById('hero');
+    const navbar     = document.getElementById('navbar');
+    const globeWrap  = document.getElementById('globe-wrapper');
+    const globeSlot  = document.getElementById('nav-globe-slot');
+    const navTitle   = document.getElementById('nav-title');
+    const navLinks   = document.getElementById('nav-links');
+    const starCanvas = document.getElementById('star-canvas');
+    const threeCanvas= document.getElementById('globe-canvas');
+    const heroOver   = document.getElementById('hero-overlay');
+
+    /* ─── STAR CANVAS ─── */
+    function drawStars() {
+      const W = window.innerWidth, H = HERO_H;
+      starCanvas.width  = W;
+      starCanvas.height = H;
+      const ctx = starCanvas.getContext('2d');
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, W, H);
+      for (let i = 0; i < 900; i++) {
+        const x = Math.random() * W;
+        const y = Math.random() * H;
+        const r = Math.random() * 1.1 + 0.1;
+        const a = (Math.random() * 0.55 + 0.2).toFixed(2);
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${a})`;
+        ctx.fill();
+      }
+    }
+    drawStars();
+
+    /* ─── THREE.JS GLOBE ─── */
+    const GLOBE_SIZE = Math.min(window.innerWidth, HERO_H) * 0.62;
+    threeCanvas.width  = GLOBE_SIZE;
+    threeCanvas.height = GLOBE_SIZE;
+    threeCanvas.style.width  = GLOBE_SIZE + 'px';
+    threeCanvas.style.height = GLOBE_SIZE + 'px';
+
+    const renderer = new THREE.WebGLRenderer({ canvas: threeCanvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(GLOBE_SIZE, GLOBE_SIZE);
+    renderer.setClearColor(0x000000, 0);
+
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    camera.position.z = 2.85;
+
+    // Earth sphere
+    const geo = new THREE.SphereGeometry(1, 72, 72);
+    const mat = new THREE.MeshPhongMaterial({ color: 0x224466, specular: new THREE.Color(0x0d2244), shininess: 20 });
+    const earth = new THREE.Mesh(geo, mat);
+    scene.add(earth);
+
+    // Cloud layer
+    const cloudMat = new THREE.MeshPhongMaterial({ transparent: true, opacity: 0, depthWrite: false });
+    const clouds = new THREE.Mesh(new THREE.SphereGeometry(1.018, 48, 48), cloudMat);
+    scene.add(clouds);
+
+    // Atmosphere glow
+    [[1.025, 0x5577ff, 0.13], [1.07, 0x2244cc, 0.07], [1.15, 0x1133aa, 0.025]].forEach(([r, c, o]) => {
+      scene.add(new THREE.Mesh(
+        new THREE.SphereGeometry(r, 32, 32),
+        new THREE.MeshPhongMaterial({ color: c, transparent: true, opacity: o, side: THREE.BackSide })
+      ));
+    });
+
+    // Lights
+    scene.add(new THREE.AmbientLight(0x223355, 0.9));
+    const sun = new THREE.DirectionalLight(0xfff8f0, 1.75);
+    sun.position.set(5, 2, 4);
+    scene.add(sun);
+    const fill = new THREE.DirectionalLight(0x334488, 0.35);
+    fill.position.set(-4, -1, -3);
+    scene.add(fill);
+
+    // Textures
+    const loader = new THREE.TextureLoader();
+    loader.crossOrigin = 'anonymous';
+
+    function fallbackTexture() {
+      const fc = document.createElement('canvas');
+      fc.width = 1024; fc.height = 512;
+      const ctx = fc.getContext('2d');
+      const g = ctx.createLinearGradient(0, 0, 0, 512);
+      g.addColorStop(0, '#0d2a55');
+      g.addColorStop(0.5, '#1a4a88');
+      g.addColorStop(1, '#0d2a55');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, 1024, 512);
+      ctx.fillStyle = '#2a6e3a';
+      [[100,90,120,110],[130,70,60,80],[220,50,170,140],[390,60,50,60],
+       [430,100,280,190],[720,90,270,200],[850,90,100,130]].forEach(([cx,cy,rw,rh]) => {
+        ctx.beginPath(); ctx.ellipse(cx, cy, rw/2, rh/2, 0, 0, Math.PI*2); ctx.fill();
+      });
+      ctx.fillStyle = '#d6eef5'; ctx.fillRect(0, 0, 1024, 20); ctx.fillRect(0, 492, 1024, 20);
+      mat.map = new THREE.CanvasTexture(fc);
+      mat.color.set(0xffffff);
+      mat.needsUpdate = true;
+    }
+
+    loader.load(
+      'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
+      t => { mat.map = t; mat.color.set(0xffffff); mat.needsUpdate = true; },
+      undefined,
+      fallbackTexture
+    );
+    loader.load(
+      'https://unpkg.com/three-globe/example/img/earth-clouds.png',
+      t => { cloudMat.alphaMap = t; cloudMat.color.set(0xffffff); cloudMat.opacity = 0.5; cloudMat.needsUpdate = true; }
+    );
+
+    // Render loop
+    (function animate() {
+      requestAnimationFrame(animate);
+      earth.rotation.y  += 0.0012;
+      clouds.rotation.y += 0.0016;
+      renderer.render(scene, camera);
+    })();
+
+    /* ─── GLOBE POSITIONING ─── */
+    // Hero center position
+    const heroGlobeCX = () => window.innerWidth / 2;
+    const heroGlobeCY = () => HERO_H / 2;
+
+    // Nav slot position (top-left, inside navbar)
+    const navGlobeCX = () => NAV_H / 2;
+    const navGlobeCY = () => NAV_H / 2;
+
+    function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+    function positionGlobe(progress) {
+      const e  = ease(Math.max(0, Math.min(1, progress)));
+      const cx = heroGlobeCX() + (navGlobeCX() - heroGlobeCX()) * e;
+      const cy = heroGlobeCY() + (navGlobeCY() - heroGlobeCY()) * e;
+      const targetScale = (NAV_GLOBE_R * 2) / GLOBE_SIZE;
+      const sc = 1 + (targetScale - 1) * e;
+      globeWrap.style.transform =
+        `translate(${cx - GLOBE_SIZE / 2}px, ${cy - GLOBE_SIZE / 2}px) scale(${sc})`;
+    }
+
+    positionGlobe(0); // initial centered position
+
+    /* ─── SCROLL HANDLER ─── */
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(onScroll);
+        ticking = true;
+      }
+    });
+
+    function onScroll() {
+      const scrollY = window.scrollY;
+      const progress = scrollY / SCROLL_DIST;
+      const e = ease(Math.max(0, Math.min(1, progress)));
+
+      // Position globe
+      positionGlobe(progress);
+
+      // Promote globe above #content once it starts shrinking toward nav
+      globeWrap.style.zIndex = progress > 0.15 ? '101' : '2';
+
+      // Hero overlay fades out
+      heroOver.style.opacity = Math.max(0, 1 - progress * 2.2);
+
+      // Nav fades in (starts at 20% scroll progress)
+      const navP = Math.max(0, (progress - 0.2) / 0.8);
+      navbar.style.opacity    = navP;
+      navTitle.style.opacity  = navP;
+      navLinks.style.opacity  = navP;
+
+      ticking = false;
+    }
+
+    // Resize
+    window.addEventListener('resize', () => {
+      drawStars();
+      positionGlobe(window.scrollY / SCROLL_DIST);
+    });
+
+  })();
+  </script>
+
+</body>
+</html>

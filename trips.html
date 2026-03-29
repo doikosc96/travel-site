@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trips — Coleman &amp; Madeleine</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+
+    .trip-counter {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      padding: 36px 32px;
+      border-bottom: 0.5px solid rgba(255,255,255,0.06);
+    }
+    .counter-item { text-align: center; }
+    .counter-number {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: var(--gold);
+      display: block;
+      line-height: 1;
+    }
+    .counter-label {
+      font-family: var(--font-ui);
+      font-size: 0.52rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 6px;
+      display: block;
+    }
+
+    .timeline {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 80px 32px 120px;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 80px;
+      bottom: 120px;
+      width: 0.5px;
+      background: rgba(255,255,255,0.08);
+      transform: translateX(-50%);
+    }
+
+    .year-marker {
+      text-align: center;
+      position: relative;
+      margin: 56px 0 40px;
+      z-index: 2;
+    }
+    .year-marker span {
+      font-family: var(--font-ui);
+      font-size: 0.6rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      background: var(--bg-dark);
+      padding: 0 16px;
+    }
+
+    .trip-card-item {
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 52px;
+      padding-right: calc(50% + 28px);
+      opacity: 0;
+      transform: translateX(-24px);
+      animation: slideIn 0.7s ease forwards;
+    }
+
+    .trip-card-item:nth-child(even) {
+      justify-content: flex-start;
+      padding-right: 0;
+      padding-left: calc(50% + 28px);
+      transform: translateX(24px);
+    }
+
+    .trip-card-item:nth-child(1)  { animation-delay: 0.1s; }
+    .trip-card-item:nth-child(2)  { animation-delay: 0.2s; }
+    .trip-card-item:nth-child(3)  { animation-delay: 0.3s; }
+    .trip-card-item:nth-child(4)  { animation-delay: 0.4s; }
+    .trip-card-item:nth-child(5)  { animation-delay: 0.5s; }
+
+    @keyframes slideIn {
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .trip-dot {
+      position: absolute;
+      left: 50%;
+      top: 28px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      transform: translateX(-50%);
+      box-shadow: 0 0 0 3px rgba(255,210,122,0.15);
+      z-index: 2;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .trip-card-link {
+      display: block;
+      text-decoration: none;
+      width: 100%;
+    }
+
+    .trip-card-link:hover .trip-dot {
+      box-shadow: 0 0 0 6px rgba(255,210,122,0.22);
+    }
+
+    .trip-card-inner {
+      border: 0.5px solid rgba(255,255,255,0.09);
+      border-radius: 6px;
+      padding: 24px 22px;
+      background: rgba(255,255,255,0.02);
+      transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+    }
+
+    .trip-card-link:hover .trip-card-inner {
+      border-color: rgba(255,210,122,0.3);
+      background: rgba(255,210,122,0.03);
+      transform: translateY(-2px);
+    }
+
+    .trip-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .trip-date {
+      font-family: var(--font-ui);
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+    }
+
+    .trip-duration {
+      font-family: var(--font-ui);
+      font-size: 0.52rem;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .trip-duration::before {
+      content: '·';
+      margin-right: 10px;
+      color: rgba(255,255,255,0.15);
+    }
+
+    .trip-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .trip-subtitle {
+      font-family: var(--font-ui);
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .trip-cities {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+
+    .trip-city-tag {
+      font-family: var(--font-ui);
+      font-size: 0.48rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      border: 0.5px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      padding: 3px 10px;
+    }
+
+    .trip-excerpt {
+      font-family: var(--font-display);
+      font-size: 0.92rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.42);
+      margin-bottom: 16px;
+    }
+
+    .trip-read-more {
+      font-family: var(--font-ui);
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      transition: color 0.2s ease;
+    }
+
+    .trip-card-link:hover .trip-read-more {
+      color: var(--gold);
+    }
+
+    .first-badge {
+      display: inline-block;
+      font-family: var(--font-ui);
+      font-size: 0.46rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 0.5px solid var(--gold-dim);
+      border-radius: 100px;
+      padding: 3px 10px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .timeline::before { left: 20px; }
+      .trip-card-item,
+      .trip-card-item:nth-child(even) {
+        padding-right: 0;
+        padding-left: 44px;
+        justify-content: flex-start;
+        transform: translateX(0);
+      }
+      .trip-dot { left: 20px; }
+      .trip-counter { gap: 28px; }
+    }
+
+  </style>
+</head>
+<body class="page-nav-visible">
+
+  <nav id="navbar">
+    <div id="nav-globe-slot"></div>
+    <span id="nav-title">Coleman <span class="amp">&amp;</span> Madeleine</span>
+    <ul id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="trips.html" class="nav-active">Trips</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="journal.html">Journal</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <header class="page-header">
+    <p class="page-header-eyebrow">Our adventures</p>
+    <h1>The Trips</h1>
+    <p>Every place we've been together — dated, documented, and never forgotten.</p>
+  </header>
+
+  <div class="trip-counter">
+    <div class="counter-item">
+      <span class="counter-number" id="trip-count">0</span>
+      <span class="counter-label">Trips</span>
+    </div>
+    <div class="counter-item">
+      <span class="counter-number" id="country-count">0</span>
+      <span class="counter-label">Countries</span>
+    </div>
+    <div class="counter-item">
+      <span class="counter-number" id="continent-count">0</span>
+      <span class="counter-label">Continents</span>
+    </div>
+  </div>
+
+  <section class="timeline" id="timeline">
+
+    <div class="year-marker"><span>2022</span></div>
+
+    <article class="trip-card-item">
+      <div class="trip-dot"></div>
+      <a href="trips/europe-may-2022.html" class="trip-card-link">
+        <div class="trip-card-inner">
+          <span class="first-badge">First international trip</span>
+          <div class="trip-meta">
+            <span class="trip-date">May 2022</span>
+            <span class="trip-duration">14 days</span>
+          </div>
+          <h2 class="trip-title">Europe</h2>
+          <p class="trip-subtitle">France &amp; Italy</p>
+          <div class="trip-cities">
+            <span class="trip-city-tag">Paris</span>
+            <span class="trip-city-tag">Venice</span>
+            <span class="trip-city-tag">Florence</span>
+            <span class="trip-city-tag">Rome</span>
+            <span class="trip-city-tag">Capri</span>
+          </div>
+          <p class="trip-excerpt">
+            The start of our adventures together — two weeks moving through
+            five cities, falling in love with the world a little more at every turn.
+          </p>
+          <span class="trip-read-more">Read the story →</span>
+        </div>
+      </a>
+    </article>
+
+    <!--
+    ══════════════════════════════════════════
+    ADD YOUR NEXT TRIP HERE — copy this block:
+
+    <div class="year-marker"><span>YEAR</span></div>
+
+    <article class="trip-card-item">
+      <div class="trip-dot"></div>
+      <a href="trips/your-slug.html" class="trip-card-link">
+        <div class="trip-card-inner">
+          <div class="trip-meta">
+            <span class="trip-date">Month Year</span>
+            <span class="trip-duration">X days</span>
+          </div>
+          <h2 class="trip-title">Destination</h2>
+          <p class="trip-subtitle">Country</p>
+          <div class="trip-cities">
+            <span class="trip-city-tag">City</span>
+          </div>
+          <p class="trip-excerpt">One or two sentences.</p>
+          <span class="trip-read-more">Read the story →</span>
+        </div>
+      </a>
+    </article>
+
+    Then update STATS below and create trips/your-slug.html
+    ══════════════════════════════════════════
+    -->
+
+  </section>
+
+  <footer>
+    <p>Coleman <span class="amp">&amp;</span> Madeleine &nbsp;·&nbsp; made with love</p>
+  </footer>
+
+  <script>
+    const STATS = {
+      trips:      1,
+      countries:  2,
+      continents: 1
+    };
+
+    function countUp(el, target, duration) {
+      if (target === 0) { el.textContent = '0'; return; }
+      let start = 0;
+      const step = target / (duration / 16);
+      const timer = setInterval(() => {
+        start += step;
+        if (start >= target) { el.textContent = target; clearInterval(timer); return; }
+        el.textContent = Math.floor(start);
+      }, 16);
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          countUp(document.getElementById('trip-count'),      STATS.trips,      900);
+          countUp(document.getElementById('country-count'),   STATS.countries,  900);
+          countUp(document.getElementById('continent-count'), STATS.continents, 900);
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    observer.observe(document.querySelector('.trip-counter'));
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/globe-mini.js"></script>
+
+</body>
+</html>

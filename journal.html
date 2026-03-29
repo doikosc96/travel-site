@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Journal — Coleman &amp; Madeleine</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+
+    /* ── Filter nav ── */
+    .journal-nav {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 36px 32px;
+      border-bottom: 0.5px solid rgba(255,255,255,0.06);
+      position: sticky;
+      top: 56px;
+      background: var(--bg-dark);
+      z-index: 20;
+    }
+
+    .journal-nav-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .journal-tab {
+      font-family: var(--font-ui);
+      font-size: 0.56rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 0.5px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      padding: 7px 18px;
+      cursor: pointer;
+      background: transparent;
+      transition: color 0.25s, border-color 0.25s, background 0.25s;
+    }
+
+    .journal-tab:hover {
+      color: rgba(255,255,255,0.7);
+      border-color: rgba(255,255,255,0.25);
+    }
+
+    .journal-tab.active {
+      color: var(--bg-dark);
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .journal-city-row {
+      display: none;
+    }
+
+    .journal-city-row.visible {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .journal-city-btn {
+      font-family: var(--font-ui);
+      font-size: 0.5rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 0.5px solid rgba(255,255,255,0.08);
+      border-radius: 100px;
+      padding: 5px 14px;
+      cursor: pointer;
+      background: transparent;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    .journal-city-btn:hover {
+      color: rgba(255,255,255,0.6);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .journal-city-btn.active {
+      color: var(--white);
+      border-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* ── Journal feed ── */
+    .journal-feed {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 64px 32px 120px;
+    }
+
+    /* ── Entry card ── */
+    .journal-entry {
+      border: 0.5px solid rgba(255,255,255,0.09);
+      border-radius: 6px;
+      padding: 36px 32px;
+      background: rgba(255,255,255,0.02);
+      margin-bottom: 24px;
+      transition: border-color 0.3s ease, background 0.3s ease;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+
+    .journal-entry.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .journal-entry:hover {
+      border-color: rgba(255,210,122,0.2);
+      background: rgba(255,210,122,0.02);
+    }
+
+    .journal-entry-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .journal-date {
+      font-family: var(--font-ui);
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+    }
+
+    .journal-city {
+      font-family: var(--font-ui);
+      font-size: 0.48rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      border: 0.5px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      padding: 3px 10px;
+    }
+
+    .journal-trip {
+      font-family: var(--font-ui);
+      font-size: 0.5rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .journal-trip::before {
+      content: '\00b7';
+      margin-right: 12px;
+      color: rgba(255,255,255,0.12);
+    }
+
+    .journal-entry-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3vw, 1.8rem);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+
+    .journal-entry-body {
+      font-family: var(--font-display);
+      font-size: 1.02rem;
+      font-weight: 300;
+      line-height: 1.95;
+      color: rgba(255,255,255,0.48);
+      letter-spacing: 0.01em;
+    }
+
+    .journal-entry-body p {
+      margin-bottom: 1.2em;
+    }
+
+    .journal-entry-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ── Divider between entries ── */
+    .journal-divider {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--gold-dim);
+      margin: 0 auto 24px;
+      opacity: 0.4;
+    }
+
+    /* ── Empty state ── */
+    .journal-empty {
+      text-align: center;
+      padding: 80px 32px;
+      display: none;
+    }
+
+    .journal-empty.visible {
+      display: block;
+    }
+
+    .journal-empty p {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .journal-feed {
+        padding: 48px 20px 80px;
+      }
+      .journal-entry {
+        padding: 28px 20px;
+      }
+      .journal-nav {
+        padding: 28px 20px;
+      }
+    }
+
+  </style>
+</head>
+<body class="page-nav-visible">
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div id="nav-globe-slot"></div>
+    <span id="nav-title">Coleman <span class="amp">&amp;</span> Madeleine</span>
+    <ul id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="trips.html">Trips</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="journal.html" class="nav-active">Journal</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <p class="page-header-eyebrow">Our reflections</p>
+    <h1>The Journal</h1>
+    <p>Thoughts and stories from everywhere we've been &mdash; one city at a time.</p>
+  </header>
+
+  <!-- FILTER NAV -->
+  <nav class="journal-nav">
+    <div class="journal-nav-row" id="trip-tabs">
+      <button class="journal-tab active" data-trip="all">All</button>
+      <button class="journal-tab" data-trip="europe-2022">Europe 2022</button>
+    </div>
+    <div class="journal-city-row" id="city-tabs">
+      <!-- Populated dynamically by JS -->
+    </div>
+  </nav>
+
+  <!-- JOURNAL FEED -->
+  <section class="journal-feed" id="journal-feed">
+
+    <article class="journal-entry" data-trip="europe-2022" data-city="capri">
+      <div class="journal-entry-meta">
+        <span class="journal-date">May 14, 2022</span>
+        <span class="journal-city">Capri</span>
+        <span class="journal-trip">Europe 2022</span>
+      </div>
+      <h2 class="journal-entry-title">The Blue Grotto and Limoncello Sunsets</h2>
+      <div class="journal-entry-body">
+        <p>We took the ferry from Naples early in the morning, the mainland shrinking behind us as the island rose from the water like something out of a painting. The cliffs were impossibly steep, the houses stacked in pastel layers against the rock, and the air smelled like salt and lemon trees before we even stepped off the boat.</p>
+        <p>The Blue Grotto was everything they said it would be. Lying flat in a tiny rowboat, slipping through the cave mouth into that impossible blue light, it felt like entering another world entirely. The water glowed from beneath, electric and surreal, and for a few seconds neither of us said a word.</p>
+        <p>That evening we found a restaurant perched on the edge of a cliff, ordered limoncello that tasted like liquid sunshine, and watched the sky turn every shade of amber and rose. It was the kind of night where you realize the trip has already given you more than you expected, and there's still so much left to hold onto.</p>
+      </div>
+    </article>
+
+    <div class="journal-divider"></div>
+
+    <article class="journal-entry" data-trip="europe-2022" data-city="rome">
+      <div class="journal-entry-meta">
+        <span class="journal-date">May 11, 2022</span>
+        <span class="journal-city">Rome</span>
+        <span class="journal-trip">Europe 2022</span>
+      </div>
+      <h2 class="journal-entry-title">Coins in the Trevi Fountain</h2>
+      <div class="journal-entry-body">
+        <p>Rome hit us differently than the other cities. There's a weight to it, a sense that every cobblestone has been walked on for thousands of years and still somehow feels alive. We spent the first morning just wandering without a plan, turning corners and finding ruins nestled between apartment buildings like it was the most natural thing in the world.</p>
+        <p>The Colosseum at golden hour was breathtaking. We stood on the upper level looking down into the labyrinth below, trying to imagine what it must have felt like to be here when the walls were full and the city's roar echoed off the stone. There's a humility that comes from standing inside something that old.</p>
+        <p>Later that night we threw coins into the Trevi Fountain with our backs turned, the way you're supposed to. The legend says it means you'll return to Rome someday. Standing there in the warm evening air, shoulder to shoulder with the crowd and the sound of rushing water, I believed it completely.</p>
+      </div>
+    </article>
+
+    <div class="journal-divider"></div>
+
+    <article class="journal-entry" data-trip="europe-2022" data-city="florence">
+      <div class="journal-entry-meta">
+        <span class="journal-date">May 8, 2022</span>
+        <span class="journal-city">Florence</span>
+        <span class="journal-trip">Europe 2022</span>
+      </div>
+      <h2 class="journal-entry-title">Under the Tuscan Sun</h2>
+      <div class="journal-entry-body">
+        <p>Florence feels like the kind of city that was designed to be beautiful. Every street looks like a painting, every building has a story, and the light in the late afternoon turns everything a warm terracotta gold. We checked into our hotel near the Duomo and spent the first hour just standing on the balcony, watching the city move below us.</p>
+        <p>The climb to the top of Brunelleschi's dome was worth every one of the four hundred steps. The view from up there is Florence in miniature, a sea of red rooftops stretching to the Tuscan hills with the Arno cutting through the center. We could see the Ponte Vecchio from above, tiny figures crossing back and forth like ants, and for a moment the whole city felt like it belonged to us.</p>
+        <p>We ended the day with the best gelato of the trip, pistachio and dark chocolate from a little shop near Santa Croce. Sitting on the steps of the basilica eating gelato as the sun set behind the rooftops, I remember thinking that this was exactly what I had hoped travel would feel like.</p>
+      </div>
+    </article>
+
+    <div class="journal-divider"></div>
+
+    <article class="journal-entry" data-trip="europe-2022" data-city="venice">
+      <div class="journal-entry-meta">
+        <span class="journal-date">May 6, 2022</span>
+        <span class="journal-city">Venice</span>
+        <span class="journal-trip">Europe 2022</span>
+      </div>
+      <h2 class="journal-entry-title">Lost in the Canals</h2>
+      <div class="journal-entry-body">
+        <p>Venice is the kind of place that doesn't feel real until you're standing in it. We arrived by water taxi from the airport, the city rising up from the lagoon in the late afternoon light, and I think we both just stared in silence for the first five minutes. There are no cars, no wide avenues, just narrow stone paths and bridges and the constant sound of water lapping against ancient walls.</p>
+        <p>We got lost almost immediately, which turned out to be the best thing that could have happened. Every wrong turn led to another hidden courtyard or a tiny bridge over a still canal, and we stopped trying to follow the map entirely. At one point we found ourselves in a quiet square with a single cafe and an old man playing accordion, and we sat there for an hour just taking it in.</p>
+        <p>The morning light in Venice is something else entirely. We woke early and walked out before the crowds arrived, and the city was completely still. The water reflected the buildings in perfect mirror image, the only sound was our footsteps on the stone, and for a few minutes it felt like we had the whole place to ourselves. That silence, that golden light on the water, is something I'll carry with me for a long time.</p>
+      </div>
+    </article>
+
+    <div class="journal-divider"></div>
+
+    <article class="journal-entry" data-trip="europe-2022" data-city="paris">
+      <div class="journal-entry-meta">
+        <span class="journal-date">May 3, 2022</span>
+        <span class="journal-city">Paris</span>
+        <span class="journal-trip">Europe 2022</span>
+      </div>
+      <h2 class="journal-entry-title">First Morning in Montmartre</h2>
+      <div class="journal-entry-body">
+        <p>We landed in Paris just after dawn, bleary-eyed and running on airplane coffee, and somehow the city still managed to take our breath away. The cab from the airport wound through streets that looked exactly like the photographs, all wrought-iron balconies and cream stone facades, and by the time we reached Montmartre the jet lag had already been replaced by something closer to disbelief.</p>
+        <p>Our first real morning we walked up to Sacre-Coeur before breakfast. The steps were mostly empty, the city spread out below us in soft grey and blue, and somewhere nearby a busker was playing something on an accordion that made the whole scene feel like a film. We found a bakery on the way down and sat on a bench with croissants that were still warm, flaking apart in layers, and I remember thinking that this was the first morning of something that would change us.</p>
+        <p>That night we saw the Eiffel Tower for the first time. We had been walking along the Seine as the sky darkened, and then suddenly there it was, lit up gold against the deep blue, impossibly tall and shimmering. Every hour it sparkles for five minutes, thousands of lights flickering like the whole tower is alive, and we stood on the Pont Alexandre III and watched it happen twice. It was the kind of moment that makes you understand why people fall in love with this city.</p>
+      </div>
+    </article>
+
+    <!--
+    ══════════════════════════════════════════
+    ADD A NEW JOURNAL ENTRY — copy this block:
+
+    <div class="journal-divider"></div>
+
+    <article class="journal-entry" data-trip="trip-slug" data-city="city-name">
+      <div class="journal-entry-meta">
+        <span class="journal-date">Month Day, Year</span>
+        <span class="journal-city">City</span>
+        <span class="journal-trip">Trip Name</span>
+      </div>
+      <h2 class="journal-entry-title">Entry Title</h2>
+      <div class="journal-entry-body">
+        <p>Your reflection here...</p>
+      </div>
+    </article>
+
+    Then add a new trip tab if needed:
+    <button class="journal-tab" data-trip="trip-slug">Trip Name</button>
+    ══════════════════════════════════════════
+    -->
+
+    <div class="journal-empty" id="journal-empty">
+      <p>No entries for this filter.</p>
+    </div>
+
+  </section>
+
+  <footer>
+    <p>Coleman <span class="amp">&amp;</span> Madeleine &nbsp;·&nbsp; made with love</p>
+  </footer>
+
+  <script>
+  (function () {
+
+    const entries = document.querySelectorAll('.journal-entry');
+    const dividers = document.querySelectorAll('.journal-divider');
+    const tripTabs = document.querySelectorAll('.journal-tab');
+    const cityRow = document.getElementById('city-tabs');
+    const emptyMsg = document.getElementById('journal-empty');
+
+    /* ── Trip tab filtering ── */
+    tripTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tripTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        filterEntries(tab.dataset.trip, 'all');
+        buildCityFilters(tab.dataset.trip);
+      });
+    });
+
+    function filterEntries(trip, city) {
+      let visibleCount = 0;
+      entries.forEach(entry => {
+        const matchTrip = trip === 'all' || entry.dataset.trip === trip;
+        const matchCity = city === 'all' || entry.dataset.city === city;
+        entry.style.display = (matchTrip && matchCity) ? '' : 'none';
+        if (matchTrip && matchCity) visibleCount++;
+      });
+
+      /* Show/hide dividers between visible entries */
+      dividers.forEach(d => d.style.display = 'none');
+      const visible = Array.from(entries).filter(e => e.style.display !== 'none');
+      visible.forEach((entry, i) => {
+        if (i < visible.length - 1) {
+          const next = entry.nextElementSibling;
+          if (next && next.classList.contains('journal-divider')) {
+            next.style.display = '';
+          }
+        }
+      });
+
+      /* Empty state */
+      emptyMsg.classList.toggle('visible', visibleCount === 0);
+
+      /* Re-trigger scroll animation for newly visible entries */
+      visible.forEach(el => {
+        if (!el.classList.contains('visible')) {
+          fadeObs.observe(el);
+        }
+      });
+    }
+
+    /* ── Dynamic city filters ── */
+    function buildCityFilters(trip) {
+      cityRow.innerHTML = '';
+      if (trip === 'all') {
+        cityRow.classList.remove('visible');
+        return;
+      }
+
+      const cities = new Set();
+      entries.forEach(entry => {
+        if (entry.dataset.trip === trip) cities.add(entry.dataset.city);
+      });
+
+      if (cities.size <= 1) {
+        cityRow.classList.remove('visible');
+        return;
+      }
+
+      const allBtn = document.createElement('button');
+      allBtn.className = 'journal-city-btn active';
+      allBtn.dataset.city = 'all';
+      allBtn.textContent = 'All';
+      cityRow.appendChild(allBtn);
+
+      cities.forEach(city => {
+        const btn = document.createElement('button');
+        btn.className = 'journal-city-btn';
+        btn.dataset.city = city;
+        btn.textContent = city.charAt(0).toUpperCase() + city.slice(1);
+        cityRow.appendChild(btn);
+      });
+
+      cityRow.classList.add('visible');
+
+      cityRow.querySelectorAll('.journal-city-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          cityRow.querySelectorAll('.journal-city-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          filterEntries(trip, btn.dataset.city);
+        });
+      });
+    }
+
+    /* ── Scroll-in animation ── */
+    const fadeObs = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 60);
+          fadeObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.05 });
+
+    document.querySelectorAll('.journal-entry').forEach(el => fadeObs.observe(el));
+
+  })();
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/globe-mini.js"></script>
+
+</body>
+</html>

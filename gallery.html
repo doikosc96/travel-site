@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — Coleman &amp; Madeleine</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+
+    /* ── Album nav tabs ── */
+    .album-nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 36px 32px;
+      border-bottom: 0.5px solid rgba(255,255,255,0.06);
+      position: sticky;
+      top: 56px;
+      background: var(--bg-dark);
+      z-index: 20;
+    }
+
+    .album-tab {
+      font-family: var(--font-ui);
+      font-size: 0.56rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 0.5px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      padding: 7px 18px;
+      cursor: pointer;
+      background: transparent;
+      transition: color 0.25s, border-color 0.25s, background 0.25s;
+    }
+
+    .album-tab:hover {
+      color: rgba(255,255,255,0.7);
+      border-color: rgba(255,255,255,0.25);
+    }
+
+    .album-tab.active {
+      color: var(--bg-dark);
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    /* ── Album section ── */
+    .album-section {
+      padding: 64px 32px 96px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: none;
+    }
+
+    .album-section.active {
+      display: block;
+    }
+
+    .album-header {
+      margin-bottom: 48px;
+    }
+
+    .album-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .album-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .album-date {
+      font-family: var(--font-ui);
+      font-size: 0.56rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+    }
+
+    .album-count {
+      font-family: var(--font-ui);
+      font-size: 0.54rem;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    .album-count::before {
+      content: '·';
+      margin-right: 16px;
+      color: rgba(255,255,255,0.12);
+    }
+
+    /* City filter row */
+    .city-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 20px;
+    }
+
+    .city-filter {
+      font-family: var(--font-ui);
+      font-size: 0.5rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 0.5px solid rgba(255,255,255,0.08);
+      border-radius: 100px;
+      padding: 5px 14px;
+      cursor: pointer;
+      background: transparent;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    .city-filter:hover {
+      color: rgba(255,255,255,0.6);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .city-filter.active {
+      color: var(--white);
+      border-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* ── Masonry grid ── */
+    .photo-masonry {
+      columns: 3;
+      column-gap: 10px;
+    }
+
+    @media (max-width: 900px) { .photo-masonry { columns: 2; } }
+    @media (max-width: 500px) { .photo-masonry { columns: 1; } }
+
+    .masonry-item {
+      break-inside: avoid;
+      margin-bottom: 10px;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.03);
+      border: 0.5px solid rgba(255,255,255,0.06);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .masonry-item.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .masonry-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.5s ease, opacity 0.3s ease;
+      opacity: 0.9;
+    }
+
+    .masonry-item:hover img {
+      transform: scale(1.03);
+      opacity: 1;
+    }
+
+    /* Photo overlay on hover */
+    .masonry-item-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0);
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+      transition: background 0.3s ease;
+    }
+
+    .masonry-item:hover .masonry-item-overlay {
+      background: rgba(0,0,0,0.28);
+    }
+
+    .masonry-item-caption {
+      font-family: var(--font-ui);
+      font-size: 0.5rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0);
+      transition: color 0.3s ease;
+    }
+
+    .masonry-item:hover .masonry-item-caption {
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* Placeholder slot (before photo is added) */
+    .masonry-placeholder {
+      break-inside: avoid;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.02);
+      border: 0.5px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      padding: 32px 16px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s;
+      cursor: default;
+    }
+
+    .masonry-placeholder.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .placeholder-icon {
+      width: 24px;
+      height: 24px;
+      opacity: 0.15;
+    }
+
+    .placeholder-label {
+      font-family: var(--font-ui);
+      font-size: 0.48rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.18);
+      text-align: center;
+    }
+
+    /* Various aspect ratios for visual interest */
+    .masonry-placeholder.ratio-tall  { aspect-ratio: 3/4; }
+    .masonry-placeholder.ratio-sq    { aspect-ratio: 1/1; }
+    .masonry-placeholder.ratio-wide  { aspect-ratio: 4/3; }
+    .masonry-placeholder.ratio-story { aspect-ratio: 9/16; }
+
+    /* ── Lightbox ── */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0,0,0,0.96);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    #lightbox.open {
+      display: flex;
+    }
+
+    #lightbox-img {
+      max-width: 90vw;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 3px;
+      opacity: 0;
+      transform: scale(0.97);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    #lightbox-img.loaded {
+      opacity: 1;
+      transform: none;
+    }
+
+    #lightbox-caption {
+      font-family: var(--font-ui);
+      font-size: 0.56rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    #lightbox-counter {
+      font-family: var(--font-ui);
+      font-size: 0.5rem;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.18);
+      margin-top: 8px;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      font-family: var(--font-ui);
+      font-size: 0.56rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      cursor: pointer;
+      background: none;
+      border: none;
+      transition: color 0.2s;
+      padding: 8px;
+    }
+
+    .lightbox-close:hover { color: var(--gold); }
+
+    .lightbox-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.2);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 16px 20px;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+
+    .lightbox-arrow:hover { color: var(--gold); }
+    .lightbox-arrow.prev { left: 16px; }
+    .lightbox-arrow.next { right: 16px; }
+
+    /* ── How to add photos (dev note) ── */
+    .dev-note {
+      max-width: 680px;
+      margin: 0 auto 64px;
+      padding: 0 32px;
+    }
+
+    .dev-note-inner {
+      border: 0.5px solid rgba(255,210,122,0.15);
+      border-radius: 6px;
+      padding: 20px 22px;
+      background: rgba(255,210,122,0.03);
+    }
+
+    .dev-note-inner p {
+      font-family: var(--font-ui);
+      font-size: 0.56rem;
+      letter-spacing: 0.08em;
+      line-height: 1.9;
+      color: rgba(255,210,122,0.45);
+    }
+
+    .dev-note-inner code {
+      font-family: monospace;
+      font-size: 0.6rem;
+      color: rgba(255,210,122,0.7);
+      background: rgba(255,210,122,0.08);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+  </style>
+</head>
+<body class="page-nav-visible">
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div id="nav-globe-slot"></div>
+    <span id="nav-title">Coleman <span class="amp">&amp;</span> Madeleine</span>
+    <ul id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="trips.html">Trips</a></li>
+      <li><a href="gallery.html" class="nav-active">Gallery</a></li>
+      <li><a href="journal.html">Journal</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <p class="page-header-eyebrow">Every moment</p>
+    <h1>The Gallery</h1>
+    <p>Photos from everywhere we've been.</p>
+  </header>
+
+  <!-- ALBUM NAV TABS -->
+  <!-- Add a new tab for each trip as you go -->
+  <nav class="album-nav">
+    <button class="album-tab active" data-album="europe-2022">Europe 2022</button>
+    <!-- <button class="album-tab" data-album="next-trip">Next Trip</button> -->
+  </nav>
+
+  <!-- ═══════════════════════════════════════
+       EUROPE 2022 ALBUM
+  ════════════════════════════════════════ -->
+  <section class="album-section active" id="album-europe-2022">
+
+    <div class="album-header">
+      <h2 class="album-title">Europe</h2>
+      <div class="album-meta">
+        <span class="album-date">May 2022</span>
+        <span class="album-count" id="europe-count">31 photos</span>
+      </div>
+
+      <!-- Filter by city -->
+      <div class="city-filters">
+        <button class="city-filter active" data-city="all">All</button>
+        <button class="city-filter" data-city="paris">Paris</button>
+        <button class="city-filter" data-city="venice">Venice</button>
+        <button class="city-filter" data-city="florence">Florence</button>
+        <button class="city-filter" data-city="rome">Rome</button>
+        <button class="city-filter" data-city="capri">Capri</button>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────────────────
+         MASONRY GRID — EUROPE 2022
+
+         HOW TO ADD A PHOTO:
+         Replace a <div class="masonry-placeholder"> with:
+
+         <div class="masonry-item" data-city="paris" data-index="0">
+           <img src="photos/europe-2022/your-photo.jpg" alt="Paris">
+           <div class="masonry-item-overlay">
+             <span class="masonry-item-caption">Paris</span>
+           </div>
+         </div>
+
+         Set data-city to: paris, venice, florence, rome, or capri
+         Set data-index to the photo's position number (for lightbox ordering)
+         The masonry layout handles sizing automatically based on your photo's
+         natural aspect ratio — portrait and landscape both work great.
+    ───────────────────────────────────────────────────────────────── -->
+    <div class="photo-masonry" id="masonry-europe-2022">
+
+      <!-- PARIS — 12 photos -->
+      <div class="masonry-item" data-city="paris" data-index="0">
+        <img src="images/europe-2022/paris-1.jpeg" alt="Paris">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Paris</span></div>
+      </div>
+      <div class="masonry-item" data-city="paris" data-index="1">
+        <img src="images/europe-2022/paris-2.jpeg" alt="Paris">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Paris</span></div>
+      </div>
+      <div class="masonry-item" data-city="paris" data-index="2">
+        <img src="images/europe-2022/paris-3.jpeg" alt="Paris">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Paris</span></div>
+      </div>
+      <div class="masonry-item" data-city="paris" data-index="3">
+        <img src="images/europe-2022/paris-4.jpeg" alt="Paris">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Paris</span></div>
+      </div>
+      <div class="masonry-item" data-city="paris" data-index="4">
+        <img src="images/europe-2022/paris-5.jpeg" alt="Paris">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Paris</span></div>
+      </div>
+      <div class="masonry-item" data-city="paris" data-index="5">
+        <img src="images/europe-2022/paris-6.jpeg" alt="Paris">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Paris</span></div>
+      </div>
+      <div class="masonry-item" data-city="paris" data-index="6">
+        <img src="images/europe-2022/paris-7.jpeg" alt="Paris">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Paris</span></div>
+      </div>
+      <div class="masonry-item" data-city="paris" data-index="7">
+        <img src="images/europe-2022/paris-8.jpeg" alt="Paris">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Paris</span></div>
+      </div>
+      <div class="masonry-item" data-city="paris" data-index="8">
+        <img src="images/europe-2022/paris-9.jpeg" alt="Paris">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Paris</span></div>
+      </div>
+      <div class="masonry-item" data-city="paris" data-index="9">
+        <img src="images/europe-2022/paris-10.jpeg" alt="Paris">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Paris</span></div>
+      </div>
+      <div class="masonry-item" data-city="paris" data-index="10">
+        <img src="images/europe-2022/paris-11.jpeg" alt="Paris">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Paris</span></div>
+      </div>
+      <div class="masonry-item" data-city="paris" data-index="11">
+        <img src="images/europe-2022/paris-12.jpeg" alt="Paris">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Paris</span></div>
+      </div>
+
+      <!-- VENICE — 5 photos -->
+      <div class="masonry-item" data-city="venice" data-index="12">
+        <img src="images/europe-2022/venice-1.jpg" alt="Venice canal walkway">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Venice</span></div>
+      </div>
+      <div class="masonry-item" data-city="venice" data-index="13">
+        <img src="images/europe-2022/venice-2.jpg" alt="Sotoportego e Corte del Milion">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Venice</span></div>
+      </div>
+      <div class="masonry-item" data-city="venice" data-index="14">
+        <img src="images/europe-2022/venice-3.jpg" alt="Airport luggage">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Venice</span></div>
+      </div>
+      <div class="masonry-item" data-city="venice" data-index="15">
+        <img src="images/europe-2022/venice-4.jpg" alt="Stray kitten in Venice">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Venice</span></div>
+      </div>
+      <div class="masonry-item" data-city="venice" data-index="16">
+        <img src="images/europe-2022/venice-5.jpg" alt="Venice">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Venice</span></div>
+      </div>
+
+      <!-- FLORENCE — 4 photos -->
+      <div class="masonry-item" data-city="florence" data-index="17">
+        <img src="images/europe-2022/florence-1.jpg" alt="Florence">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Florence</span></div>
+      </div>
+      <div class="masonry-item" data-city="florence" data-index="18">
+        <img src="images/europe-2022/florence-2.jpg" alt="Florence">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Florence</span></div>
+      </div>
+      <div class="masonry-item" data-city="florence" data-index="19">
+        <img src="images/europe-2022/florence-3.jpg" alt="Florence">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Florence</span></div>
+      </div>
+      <div class="masonry-item" data-city="florence" data-index="20">
+        <img src="images/europe-2022/florence-4.jpg" alt="Florence">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Florence</span></div>
+      </div>
+
+      <!-- ROME — 5 photos -->
+      <div class="masonry-item" data-city="rome" data-index="21">
+        <img src="images/europe-2022/rome-1.jpg" alt="Rome">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Rome</span></div>
+      </div>
+      <div class="masonry-item" data-city="rome" data-index="22">
+        <img src="images/europe-2022/rome-2.jpg" alt="Rome">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Rome</span></div>
+      </div>
+      <div class="masonry-item" data-city="rome" data-index="23">
+        <img src="images/europe-2022/rome-3.jpg" alt="Rome">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Rome</span></div>
+      </div>
+      <div class="masonry-item" data-city="rome" data-index="24">
+        <img src="images/europe-2022/rome-4.jpg" alt="Rome">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Rome</span></div>
+      </div>
+      <div class="masonry-item" data-city="rome" data-index="25">
+        <img src="images/europe-2022/rome-5.jpg" alt="Rome">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Rome</span></div>
+      </div>
+
+      <!-- CAPRI — 5 photos -->
+      <div class="masonry-item" data-city="capri" data-index="26">
+        <img src="images/europe-2022/capri-1.jpeg" alt="Capri">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Capri</span></div>
+      </div>
+      <div class="masonry-item" data-city="capri" data-index="27">
+        <img src="images/europe-2022/capri-2.jpeg" alt="Capri">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Capri</span></div>
+      </div>
+      <div class="masonry-item" data-city="capri" data-index="28">
+        <img src="images/europe-2022/capri-3.jpeg" alt="Capri">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Capri</span></div>
+      </div>
+      <div class="masonry-item" data-city="capri" data-index="29">
+        <img src="images/europe-2022/capri-4.jpeg" alt="Capri">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Capri</span></div>
+      </div>
+      <div class="masonry-item" data-city="capri" data-index="30">
+        <img src="images/europe-2022/capri-5.jpeg" alt="Capri">
+        <div class="masonry-item-overlay"><span class="masonry-item-caption">Capri</span></div>
+      </div>
+
+    </div><!-- end .photo-masonry -->
+
+  </section>
+  <!-- end #album-europe-2022 -->
+
+  <!--
+  ════════════════════════════════════════════
+  TO ADD A NEW TRIP ALBUM:
+
+  1. Add a tab button above:
+     <button class="album-tab" data-album="japan-2024">Japan 2024</button>
+
+  2. Copy this section block and update the id, title, date, city filters, and photo grid:
+     <section class="album-section" id="album-japan-2024">
+       ...
+     </section>
+  ════════════════════════════════════════════
+  -->
+
+  <footer>
+    <p>Coleman <span class="amp">&amp;</span> Madeleine &nbsp;·&nbsp; made with love</p>
+  </footer>
+
+  <!-- ── LIGHTBOX ── -->
+  <div id="lightbox">
+    <button class="lightbox-close" id="lightbox-close">Close ✕</button>
+    <button class="lightbox-arrow prev" id="lb-prev">&#8592;</button>
+    <img id="lightbox-img" src="" alt="">
+    <button class="lightbox-arrow next" id="lb-next">&#8594;</button>
+    <div id="lightbox-caption"></div>
+    <div id="lightbox-counter"></div>
+  </div>
+
+  <script>
+  (function () {
+
+    /* ── Album tabs ── */
+    document.querySelectorAll('.album-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.album-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.album-section').forEach(s => s.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('album-' + tab.dataset.album).classList.add('active');
+      });
+    });
+
+    /* ── City filters ── */
+    document.querySelectorAll('.city-filters').forEach(filterRow => {
+      filterRow.querySelectorAll('.city-filter').forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterRow.querySelectorAll('.city-filter').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const city = btn.dataset.city;
+          const section = filterRow.closest('.album-section');
+          section.querySelectorAll('.masonry-item, .masonry-placeholder').forEach(item => {
+            if (city === 'all' || item.dataset.city === city) {
+              item.style.display = '';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+      });
+    });
+
+    /* ── Scroll-in animation ── */
+    const fadeObs = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 40);
+          fadeObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.05 });
+
+    document.querySelectorAll('.masonry-item, .masonry-placeholder').forEach(el => fadeObs.observe(el));
+
+    /* ── Lightbox ── */
+    let photos = [];
+    let current = 0;
+
+    function buildPhotoList() {
+      photos = Array.from(document.querySelectorAll('.album-section.active .masonry-item'))
+        .filter(el => el.style.display !== 'none')
+        .sort((a, b) => (+a.dataset.index) - (+b.dataset.index))
+        .map(el => ({
+          src: el.querySelector('img').src,
+          caption: el.querySelector('.masonry-item-caption')?.textContent || '',
+          index: +el.dataset.index
+        }));
+    }
+
+    function openLightbox(dataIndex) {
+      buildPhotoList();
+      if (!photos.length) return;
+      // Find position of the clicked photo in the filtered/sorted list
+      current = photos.findIndex(p => p.index === dataIndex);
+      if (current < 0) current = 0;
+      showPhoto(current);
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function showPhoto(index) {
+      const img = document.getElementById('lightbox-img');
+      img.classList.remove('loaded');
+      img.src = photos[index].src;
+      img.onload = () => img.classList.add('loaded');
+      document.getElementById('lightbox-caption').textContent = photos[index].caption;
+      document.getElementById('lightbox-counter').textContent =
+        (index + 1) + ' / ' + photos.length;
+    }
+
+    document.querySelectorAll('.masonry-item').forEach(el => {
+      el.addEventListener('click', () => openLightbox(+el.dataset.index));
+    });
+
+    document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+    document.getElementById('lightbox').addEventListener('click', e => {
+      if (e.target === document.getElementById('lightbox')) closeLightbox();
+    });
+
+    document.getElementById('lb-prev').addEventListener('click', e => {
+      e.stopPropagation();
+      current = (current - 1 + photos.length) % photos.length;
+      showPhoto(current);
+    });
+
+    document.getElementById('lb-next').addEventListener('click', e => {
+      e.stopPropagation();
+      current = (current + 1) % photos.length;
+      showPhoto(current);
+    });
+
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox').classList.contains('open')) return;
+      if (e.key === 'ArrowRight') { current = (current + 1) % photos.length; showPhoto(current); }
+      if (e.key === 'ArrowLeft')  { current = (current - 1 + photos.length) % photos.length; showPhoto(current); }
+      if (e.key === 'Escape') closeLightbox();
+    });
+
+  })();
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/globe-mini.js"></script>
+
+</body>
+</html>

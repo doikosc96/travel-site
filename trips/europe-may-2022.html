@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Europe, May 2022 — Coleman &amp; Madeleine</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+
+    /* ── Trip hero ── */
+    .trip-hero {
+      position: relative;
+      height: 100vh;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .trip-hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 60%, rgba(60,40,10,0.45) 0%, transparent 60%),
+        radial-gradient(ellipse at 75% 30%, rgba(10,25,60,0.5) 0%, transparent 55%),
+        #07080f;
+      z-index: 1;
+    }
+
+    /* Animated grain overlay for depth */
+    .trip-hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    /* Thin horizon line */
+    .trip-hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 10%;
+      right: 10%;
+      height: 0.5px;
+      background: linear-gradient(to right, transparent, rgba(255,210,122,0.18), transparent);
+      z-index: 3;
+    }
+
+    .trip-hero-content {
+      position: relative;
+      z-index: 4;
+      text-align: center;
+      padding: 0 32px;
+      opacity: 0;
+      animation: heroFade 1.2s ease 0.3s forwards;
+    }
+
+    @keyframes heroFade {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .trip-hero-eyebrow {
+      font-family: var(--font-ui);
+      font-size: 0.58rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 22px;
+      display: block;
+    }
+
+    .trip-hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 9vw, 6.5rem);
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--white);
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+
+    .trip-hero-subtitle {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(255,255,255,0.38);
+      letter-spacing: 0.08em;
+      margin-bottom: 44px;
+    }
+
+    /* City pills */
+    .city-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 52px;
+    }
+
+    .city-pill {
+      font-family: var(--font-ui);
+      font-size: 0.52rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      border: 0.5px solid rgba(255,255,255,0.12);
+      border-radius: 100px;
+      padding: 5px 14px;
+    }
+
+    /* Trip stats row */
+    .trip-hero-stats {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat-val {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 300;
+      color: var(--gold);
+      display: block;
+      line-height: 1;
+    }
+
+    .hero-stat-label {
+      font-family: var(--font-ui);
+      font-size: 0.5rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 5px;
+      display: block;
+    }
+
+    /* Scroll cue */
+    .hero-scroll-cue {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      opacity: 0;
+      animation: heroFade 1s ease 1.6s forwards;
+    }
+
+    .hero-scroll-cue span {
+      font-family: var(--font-ui);
+      font-size: 0.48rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.18);
+    }
+
+    .hero-scroll-cue .hint-line { height: 18px; }
+
+    /* ── Article body ── */
+    .trip-body {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 96px 32px 56px;
+    }
+
+    /* Section: journey intro */
+    .journey-intro {
+      margin-bottom: 72px;
+    }
+
+    .journey-intro p {
+      font-family: var(--font-display);
+      font-size: 1.22rem;
+      font-weight: 300;
+      line-height: 2;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 1.4em;
+    }
+
+    .journey-intro p:first-child::first-letter {
+      font-size: 3.8rem;
+      font-weight: 300;
+      float: left;
+      line-height: 0.78;
+      margin: 0.08em 0.1em 0 0;
+      color: var(--gold);
+    }
+
+    /* ── City sections ── */
+    .city-section {
+      margin-bottom: 72px;
+      padding-top: 48px;
+      border-top: 0.5px solid rgba(255,255,255,0.06);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .city-section.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .city-section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .city-name {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      color: var(--white);
+    }
+
+    .city-country {
+      font-family: var(--font-ui);
+      font-size: 0.55rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+    }
+
+    .city-body p {
+      font-family: var(--font-display);
+      font-size: 1.08rem;
+      font-weight: 300;
+      line-height: 1.96;
+      color: rgba(255,255,255,0.52);
+      margin-bottom: 1.2em;
+    }
+
+    /* Photo placeholder grid */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 32px 0;
+    }
+
+    .photo-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .photo-grid.wide    { grid-template-columns: 2fr 1fr; }
+
+    .photo-slot {
+      aspect-ratio: 4/3;
+      background: rgba(255,255,255,0.03);
+      border: 0.5px solid rgba(255,255,255,0.07);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+    }
+
+    .photo-slot:hover {
+      border-color: rgba(255,210,122,0.22);
+    }
+
+    .photo-slot.tall { aspect-ratio: 3/4; }
+    .photo-slot.wide { aspect-ratio: 16/9; grid-column: span 2; }
+
+    .photo-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0.88;
+      transition: opacity 0.3s ease, transform 0.4s ease;
+    }
+
+    .photo-slot:hover img {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+
+    /* Add photo label (shown when src not set) */
+    .photo-slot-label {
+      font-family: var(--font-ui);
+      font-size: 0.5rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.15);
+      text-align: center;
+      padding: 8px;
+    }
+
+    /* ── Quote pull ── */
+    .pull-quote {
+      margin: 56px 0;
+      padding: 0 0 0 24px;
+      border-left: 1.5px solid var(--gold-dim);
+    }
+
+    .pull-quote p {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* ── Back / next navigation ── */
+    .trip-nav {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 32px 96px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 0.5px solid rgba(255,255,255,0.06);
+    }
+
+    .trip-nav a {
+      font-family: var(--font-ui);
+      font-size: 0.56rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+
+    .trip-nav a:hover { color: var(--gold); }
+
+  </style>
+</head>
+<body class="page-nav-visible">
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div id="nav-globe-slot"></div>
+    <span id="nav-title">Coleman <span class="amp">&amp;</span> Madeleine</span>
+    <ul id="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../trips.html" class="nav-active">Trips</a></li>
+      <li><a href="../gallery.html">Gallery</a></li>
+      <li><a href="../journal.html">Journal</a></li>
+      <li><a href="../about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <header class="trip-hero">
+    <div class="trip-hero-bg"></div>
+
+    <div class="trip-hero-content">
+      <span class="trip-hero-eyebrow">May 2022 &nbsp;·&nbsp; Two weeks</span>
+      <h1 class="trip-hero-title">Europe</h1>
+      <p class="trip-hero-subtitle">Our first adventure together</p>
+
+      <div class="city-pills">
+        <span class="city-pill">Paris</span>
+        <span class="city-pill">Venice</span>
+        <span class="city-pill">Florence</span>
+        <span class="city-pill">Rome</span>
+        <span class="city-pill">Capri</span>
+      </div>
+
+      <div class="trip-hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-val">5</span>
+          <span class="hero-stat-label">Cities</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-val">2</span>
+          <span class="hero-stat-label">Countries</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-val">14</span>
+          <span class="hero-stat-label">Days</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-val">1</span>
+          <span class="hero-stat-label">First</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll-cue">
+      <span>read the story</span>
+      <div class="hint-line"></div>
+      <div class="hint-arrow"></div>
+    </div>
+  </header>
+
+  <!-- BODY -->
+  <article class="trip-body">
+
+    <!-- Opening -->
+    <div class="journey-intro">
+      <p>
+        It was a planned trip — exciting but a little anxious. We had never been out
+        of the country together before, so we didn't really know how each other traveled.
+        We started dating in January 2020, and while we had moved in together by this
+        point it was still a relatively new relationship. I was 24, Madeleine was 22.
+        Young, which made it all the more exciting.
+      </p>
+      <p>
+        Very romantic, very adventurous, but slow. We both found pretty quickly that we
+        like to relax in a city — vacation as if we live there. A couple of big things
+        we want to hit over a few days but no rush, just flowing through with an ease
+        and lightness. Flitting in and out of shops, stopping at a café for a snack or
+        an espresso, the occasional guilty cigarette here and there.
+      </p>
+    </div>
+
+    <!-- ─── PARIS ─── -->
+    <section class="city-section">
+      <div class="city-section-header">
+        <h2 class="city-name">Paris</h2>
+        <span class="city-country">France</span>
+      </div>
+      <div class="city-body">
+        <p>
+          Paris is the city of love. Waking up early while Madeleine slept, reading
+          Camus at a café, then bringing back croissants for her to wake up to.
+          Strolling down the Champs-Élysées, dragging her through the Louvre to feed
+          my insatiable Monet appetite. Riding up to Montmartre to buy our first oil
+          painting together to commemorate the trip. Drinks at Bar Hemingway in the
+          Ritz with a world-famous bartender.
+        </p>
+        <p>
+          Our last day we spent lounging on the lawn in front of the Eiffel Tower —
+          beautiful sunny day, some bread, cheese, ham, and rosé. That was the one.
+        </p>
+
+        <div class="photo-grid">
+          <div class="photo-slot">
+            <img src="../images/europe-2022/paris-1.jpeg" alt="Paris">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/paris-2.jpeg" alt="Paris">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/paris-3.jpeg" alt="Paris">
+          </div>
+        </div>
+        <div class="photo-grid">
+          <div class="photo-slot">
+            <img src="../images/europe-2022/paris-4.jpeg" alt="Paris">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/paris-5.jpeg" alt="Paris">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/paris-6.jpeg" alt="Paris">
+          </div>
+        </div>
+        <div class="photo-grid">
+          <div class="photo-slot">
+            <img src="../images/europe-2022/paris-7.jpeg" alt="Paris">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/paris-8.jpeg" alt="Paris">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/paris-9.jpeg" alt="Paris">
+          </div>
+        </div>
+        <div class="photo-grid">
+          <div class="photo-slot">
+            <img src="../images/europe-2022/paris-10.jpeg" alt="Paris">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/paris-11.jpeg" alt="Paris">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/paris-12.jpeg" alt="Paris">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── VENICE ─── -->
+    <section class="city-section">
+      <div class="city-section-header">
+        <h2 class="city-name">Venice</h2>
+        <span class="city-country">Italy</span>
+      </div>
+      <div class="city-body">
+        <p>
+          Venice was a trip. It felt like a movie set. We had a little boutique hotel
+          tucked in a back, quiet alley — but we livened it up when we met Victor and
+          Nicky and partied through the night, found some stray kittens, and had them
+          sleepover on our floor. A blast in a really neat city.
+        </p>
+
+        <div class="photo-grid two-col">
+          <div class="photo-slot">
+            <img src="../images/europe-2022/venice-1.jpg" alt="Venice canal walkway">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/venice-2.jpg" alt="Sotoportego e Corte del Milion">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/venice-3.jpg" alt="Airport luggage">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/venice-4.jpg" alt="Stray kitten in Venice">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/venice-5.jpg" alt="Venice">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── FLORENCE ─── -->
+    <section class="city-section">
+      <div class="city-section-header">
+        <h2 class="city-name">Florence</h2>
+        <span class="city-country">Italy</span>
+      </div>
+      <div class="city-body">
+        <p>
+          Florence was more strolls, sandwiches, art, and pasta. We took the walk up
+          to Piazzale Michelangelo and found a table at a restaurant at the top with
+          views over the city. At some point the waitress came over, visibly concerned —
+          they had a reservation in three hours. "Do you think you'll be finished at
+          the table by then?" We were on a bottle of wine watching the city at sunset.
+          Perfect.
+        </p>
+
+        <div class="photo-grid two-col">
+          <div class="photo-slot">
+            <img src="../images/europe-2022/florence-1.jpg" alt="Florence">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/florence-2.jpg" alt="Florence">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/florence-3.jpg" alt="Florence">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/florence-4.jpg" alt="Florence">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── ROME ─── -->
+    <section class="city-section">
+      <div class="city-section-header">
+        <h2 class="city-name">Rome</h2>
+        <span class="city-country">Italy</span>
+      </div>
+      <div class="city-body">
+        <p>
+          In Rome you could feel the gravity of history. The Colosseum and its hordes
+          of tourists. The Trevi Fountain tucked around some little side street corner —
+          we had McDonald's vanilla cones and fries before we walked up to it. Seeing
+          the Vatican and St. Peter's Basilica was truly incredible together.
+        </p>
+
+        <div class="photo-grid">
+          <div class="photo-slot">
+            <img src="../images/europe-2022/rome-1.jpg" alt="Rome">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/rome-2.jpg" alt="Rome">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/rome-3.jpg" alt="Rome">
+          </div>
+        </div>
+        <div class="photo-grid two-col">
+          <div class="photo-slot">
+            <img src="../images/europe-2022/rome-4.jpg" alt="Rome">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/rome-5.jpg" alt="Rome">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CAPRI ─── -->
+    <section class="city-section">
+      <div class="city-section-header">
+        <h2 class="city-name">Capri</h2>
+        <span class="city-country">Italy</span>
+      </div>
+      <div class="city-body">
+        <p>
+          We spent the day in Capri tooling around the island on our little dinghy —
+          hopping in the water in coves, checking out the Blue Grotto, and spontaneously
+          running into Kendall, Jordan, and their crew on our boat trip. We grabbed
+          drinks and food with them to close out the day.
+        </p>
+        <p>
+          It was an incredible first trip together with so many memories to build our
+          life upon. We love to travel together and this set the tone — it was possible,
+          and we weren't going to kill each other traveling together. Which is a very
+          positive sign.
+        </p>
+
+        <div class="photo-grid">
+          <div class="photo-slot">
+            <img src="../images/europe-2022/capri-1.jpeg" alt="Capri">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/capri-2.jpeg" alt="Capri">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/capri-3.jpeg" alt="Capri">
+          </div>
+        </div>
+        <div class="photo-grid two-col">
+          <div class="photo-slot">
+            <img src="../images/europe-2022/capri-4.jpeg" alt="Capri">
+          </div>
+          <div class="photo-slot">
+            <img src="../images/europe-2022/capri-5.jpeg" alt="Capri">
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </article>
+
+  <!-- TRIP NAV -->
+  <div class="trip-nav">
+    <a href="../trips.html">← All trips</a>
+    <a href="#">Next trip →</a>
+  </div>
+
+  <footer>
+    <p>Coleman <span class="amp">&amp;</span> Madeleine &nbsp;·&nbsp; made with love</p>
+  </footer>
+
+  <script>
+    // Fade in city sections as they scroll into view
+    const sections = document.querySelectorAll('.city-section');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    sections.forEach(s => obs.observe(s));
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="../js/globe-mini.js"></script>
+
+</body>
+</html>
